@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { GroupCodeBadge } from "@/components/shared/CopyButton"
 import { formatRupees, formatMonthYear } from "@/lib/calculations"
 import type { ActivityLog, Member, Meeting, Loan } from "@/types"
@@ -232,7 +233,7 @@ export default function DashboardClient({
                              uppercase tracking-wider leading-tight">
               {t.activeMembersLabel}
             </span>
-            <span className="text-lg md:text-2xl">👥</span>
+            <Image src="/Bachat Gat icons/Dashboard/Active Members.svg" alt="Active Members" width={24} height={24} />
           </div>
           <p className="text-2xl md:text-3xl font-black text-[#1B2B6B] dark:text-white">
             {activeMembers.length}
@@ -250,7 +251,7 @@ export default function DashboardClient({
                 {t.totalCorpusLabel}
               </span>
             </div>
-            <span className="text-lg md:text-2xl text-white">🏦</span>
+            <Image src="/Bachat Gat icons/Dashboard/Total Corpus.svg" alt="Total Corpus" width={24} height={24} />
           </div>
           <p className="text-lg md:text-2xl font-black text-white 
                         leading-tight break-all">
@@ -267,7 +268,7 @@ export default function DashboardClient({
                              uppercase tracking-wider leading-tight">
               {t.outstandingLoansLabel}
             </span>
-            <span className="text-lg md:text-2xl">💰</span>
+            <Image src="/Bachat Gat icons/Dashboard/Outstanding Loans.svg" alt="Outstanding Loans" width={24} height={24} />
           </div>
           <p className="text-lg md:text-2xl font-black text-[#1B2B6B] dark:text-white
                         leading-tight break-all">
@@ -287,7 +288,7 @@ export default function DashboardClient({
                              uppercase tracking-wider leading-tight">
               {t.pendingRequestsLabel}
             </span>
-            <span className="text-lg md:text-2xl">🛡️</span>
+            <Image src="/Bachat Gat icons/Dashboard/Pending Requests.svg" alt="Pending Requests" width={24} height={24} />
           </div>
           <p className="text-2xl md:text-3xl font-black text-[#1B2B6B] dark:text-white">
             {pendingLoanCount + pendingMembers.length}
@@ -380,7 +381,7 @@ export default function DashboardClient({
                 href="/meetings"
                 className="bg-orange-50/50 hover:bg-orange-100/50 text-[#E85D26] border border-orange-100 dark:bg-orange-950/10 dark:hover:bg-orange-950/30 dark:text-orange-400 dark:border-orange-900/30 rounded-2xl p-4 text-center text-xs font-bold transition active:scale-95 flex flex-col items-center gap-1.5"
               >
-                <span>📅</span>
+                <Image src="/Bachat Gat icons/Dashboard/New Meeting.svg" alt="New Meeting" width={24} height={24} />
                 <span>{t.newMeetingAction}</span>
               </Link>
               
@@ -388,7 +389,7 @@ export default function DashboardClient({
                 href="/members"
                 className="bg-blue-50/50 hover:bg-blue-100/50 text-[#2E4099] border border-blue-100 dark:bg-blue-950/10 dark:hover:bg-blue-950/30 dark:text-blue-400 dark:border-blue-900/30 rounded-2xl p-4 text-center text-xs font-bold transition active:scale-95 flex flex-col items-center gap-1.5"
               >
-                <span>👤</span>
+                <Image src="/Bachat Gat icons/Dashboard/Add Members.svg" alt="Add Member" width={24} height={24} />
                 <span>{t.addMemberAction}</span>
               </Link>
 
@@ -396,7 +397,7 @@ export default function DashboardClient({
                 href="/loans"
                 className="bg-purple-50/50 hover:bg-purple-100/50 text-purple-700 border border-purple-100 dark:bg-purple-950/10 dark:hover:bg-purple-950/30 dark:text-purple-400 dark:border-purple-900/30 rounded-2xl p-4 text-center text-xs font-bold transition active:scale-95 flex flex-col items-center gap-1.5"
               >
-                <span>💰</span>
+                <Image src="/Bachat Gat icons/Dashboard/View Loans.svg" alt="View Loans" width={24} height={24} />
                 <span>{t.viewLoansAction}</span>
               </Link>
             </div>

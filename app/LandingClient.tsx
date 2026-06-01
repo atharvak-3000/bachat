@@ -7,18 +7,9 @@ import {
   Menu, 
   X, 
   Check, 
-  Wallet, 
-  Landmark, 
-  FileText, 
   Quote, 
   Star, 
-  Home, 
-  UserPlus, 
-  TrendingUp,
-  BookOpen,
-  ChevronRight,
-  Calendar,
-  Bell
+  ChevronRight
 } from "lucide-react"
 import DarkModeToggle from "@/components/ui/DarkModeToggle"
 
@@ -205,32 +196,32 @@ export default function LandingClient({ isAuthenticated, role, status }: Landing
     {
       title: t.feat1Title,
       description: t.feat1Desc,
-      icon: BookOpen
+      img: "/Bachat Gat icons/Features/Automatic Ledger.svg"
     },
     {
       title: t.feat2Title,
       description: t.feat2Desc,
-      icon: Landmark
+      img: "/Bachat Gat icons/Features/Loan & EMI Management.svg"
     },
     {
       title: t.feat3Title,
       description: t.feat3Desc,
-      icon: Wallet
+      img: "/Bachat Gat icons/Features/Digital Passbook.svg"
     },
     {
       title: t.feat4Title,
       description: t.feat4Desc,
-      icon: Calendar
+      img: "/Bachat Gat icons/Features/Meeting Records.svg"
     },
     {
       title: t.feat5Title,
       description: t.feat5Desc,
-      icon: FileText
+      img: "/Bachat Gat icons/Features/KYC Verification.svg"
     },
     {
       title: t.feat6Title,
       description: t.feat6Desc,
-      icon: Bell
+      img: "/Bachat Gat icons/Features/Instant Notifications.svg"
     }
   ]
 
@@ -239,19 +230,19 @@ export default function LandingClient({ isAuthenticated, role, status }: Landing
       number: t.step1Num,
       title: t.step1Title,
       description: t.step1Desc,
-      icon: Home
+      img: "/Bachat Gat icons/How It Works/Create Bachat Gat.svg"
     },
     {
       number: t.step2Num,
       title: t.step2Title,
       description: t.step2Desc,
-      icon: UserPlus
+      img: "/Bachat Gat icons/How It Works/Add Member.svg"
     },
     {
       number: t.step3Num,
       title: t.step3Title,
       description: t.step3Desc,
-      icon: TrendingUp
+      img: "/Bachat Gat icons/How It Works/Manage Accounts.svg"
     }
   ]
 
@@ -512,21 +503,18 @@ export default function LandingClient({ isAuthenticated, role, status }: Landing
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {features.map((feat, idx) => {
-              const IconComp = feat.icon
-              return (
-                <div 
-                  key={idx} 
-                  className="bg-white dark:bg-[#1A1D27] rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md hover:border-blue-200 dark:hover:border-blue-900/50 hover:-translate-y-1 transition-all duration-300 flex flex-col items-start"
-                >
-                  <div className="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-[#1B2B6B] dark:text-blue-400 mb-6 shadow-sm">
-                    <IconComp className="w-6 h-6" />
-                  </div>
-                  <h3 className="font-extrabold text-gray-900 dark:text-white text-lg mb-2">{feat.title}</h3>
-                  <p className="text-gray-500 dark:text-gray-400 text-xs md:text-sm font-semibold leading-relaxed">{feat.description}</p>
+            {features.map((feat, idx) => (
+              <div 
+                key={idx} 
+                className="bg-white dark:bg-[#1A1D27] rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md hover:border-blue-200 dark:hover:border-blue-900/50 hover:-translate-y-1 transition-all duration-300 flex flex-col items-start"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-[#1B2B6B] dark:text-blue-400 mb-6 shadow-sm">
+                  <Image src={feat.img} alt={feat.title} width={28} height={28} />
                 </div>
-              )
-            })}
+                <h3 className="font-extrabold text-gray-900 dark:text-white text-lg mb-2">{feat.title}</h3>
+                <p className="text-gray-500 dark:text-gray-400 text-xs md:text-sm font-semibold leading-relaxed">{feat.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -542,33 +530,30 @@ export default function LandingClient({ isAuthenticated, role, status }: Landing
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-            {steps.map((step, idx) => {
-              const IconComp = step.icon
-              return (
-                <div key={idx} className="flex flex-col items-center text-center space-y-4 relative bg-white dark:bg-[#1A1D27] p-8 rounded-3xl border border-gray-100 dark:border-gray-850 shadow-sm">
-                  {/* Step number badge */}
-                  <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 w-10 h-10 rounded-full bg-[#E8530A] text-white flex items-center justify-center font-extrabold shadow-md border-4 border-white dark:border-[#1A1D27]">
-                    {step.number}
-                  </div>
-                  
-                  <div className="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-950/40 text-[#1B2B6B] dark:text-blue-400 flex items-center justify-center shadow-sm">
-                    <IconComp className="w-7 h-7" />
-                  </div>
-
-                  <h3 className="text-lg font-black text-gray-900 dark:text-white pt-2">{step.title}</h3>
-                  <p className="text-gray-500 dark:text-gray-400 text-xs md:text-sm font-semibold leading-relaxed max-w-[240px]">
-                    {step.description}
-                  </p>
-
-                  {/* Connect arrow on desktop */}
-                  {idx < 2 && (
-                    <div className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10 text-blue-400 dark:text-blue-900">
-                      <ChevronRight className="w-6 h-6 font-black" />
-                    </div>
-                  )}
+            {steps.map((step, idx) => (
+              <div key={idx} className="flex flex-col items-center text-center space-y-4 relative bg-white dark:bg-[#1A1D27] p-8 rounded-3xl border border-gray-100 dark:border-gray-850 shadow-sm">
+                {/* Step number badge */}
+                <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 w-10 h-10 rounded-full bg-[#E8530A] text-white flex items-center justify-center font-extrabold shadow-md border-4 border-white dark:border-[#1A1D27]">
+                  {step.number}
                 </div>
-              )
-            })}
+                
+                <div className="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-950/40 text-[#1B2B6B] dark:text-blue-400 flex items-center justify-center shadow-sm">
+                  <Image src={step.img} alt={step.title} width={32} height={32} />
+                </div>
+
+                <h3 className="text-lg font-black text-gray-900 dark:text-white pt-2">{step.title}</h3>
+                <p className="text-gray-500 dark:text-gray-400 text-xs md:text-sm font-semibold leading-relaxed max-w-[240px]">
+                  {step.description}
+                </p>
+
+                {/* Connect arrow on desktop */}
+                {idx < 2 && (
+                  <div className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10 text-blue-400 dark:text-blue-900">
+                    <ChevronRight className="w-6 h-6 font-black" />
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </section>

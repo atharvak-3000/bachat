@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 
 type Screen = 'landing' | 'select' | 'superadmin' | 'member'
@@ -39,7 +40,7 @@ export default function SignInPage() {
       trustedBy: 'महाराष्ट्रातील बचत गटांचा विश्वास',
       loginAs: 'म्हणून लॉगिन करा',
       chooseRole: 'सुरू ठेवण्यासाठी तुमची भूमिका निवडा',
-      superadmin: 'सुपरअॅडमिन',
+      superadmin: 'महाध्यक्ष',
       superadminDesc: 'गट, सदस्य, सभा आणि कर्ज व्यवस्थापित करा',
       superadminEmail: 'ईमेलसह लॉगिन करा',
       member: 'सदस्य',
@@ -52,10 +53,10 @@ export default function SignInPage() {
       back: '← मागे',
       invalidMember: 'अवैध फोन नंबर किंवा पासवर्ड. तुमच्या गट अॅडमिनशी संपर्क साधा.',
       invalidAdmin: 'अवैध ईमेल किंवा पासवर्ड.',
-      noCredentials: 'लॉगिन माहिती नाही? तुमच्या गट सुपरअॅडमिनला विचारा.',
+      noCredentials: 'लॉगिन माहिती नाही? तुमच्या गट महाध्यक्षांना विचारा.',
       logoSub: 'बचत गट व्यवस्थापन',
       logoDesc: 'Digital platform for Bachat Gat management',
-      adminLoginTitle: 'सुपरअॅडमिन लॉगिन',
+      adminLoginTitle: 'महाध्यक्ष लॉगिन',
       adminLoginSub: 'तुमच्या ईमेलने साइन इन करा',
       memberLoginTitle: 'सदस्य लॉगिन',
       memberLoginSub: 'अॅडमिनकडून मिळालेली माहिती वापरा',
@@ -171,11 +172,17 @@ export default function SignInPage() {
       <LangToggle />
       <div className="w-full max-w-sm">
         {/* Logo */}
-        <div className="text-center mb-10">
-          <div className="w-20 h-20 bg-[#E85D26] rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-lg active:scale-95 transition-transform">
-            <span className="text-4xl">📒</span>
+        <div className="text-center mb-10 flex flex-col items-center">
+          <div className="relative h-12 w-48 mb-2">
+            <Image
+              src="/logo-horizontal.png"
+              alt="BachatBook"
+              fill
+              sizes="192px"
+              className="object-contain brightness-0 invert"
+              priority
+            />
           </div>
-          <h1 className="text-3xl font-bold text-white">BachatBook</h1>
           <p className="text-orange-300 dark:text-orange-400 font-medium mt-1">{t.logoSub}</p>
           <p className="text-blue-100 dark:text-blue-200 text-sm mt-2">{t.logoDesc}</p>
         </div>

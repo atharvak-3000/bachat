@@ -176,7 +176,7 @@ export default function SignInPage() {
           <div className="relative h-12 w-48 mb-2">
             <Image
               src="/logo-horizontal.png"
-              alt="BachatBook"
+              alt="BachatGatOnline"
               fill
               sizes="192px"
               className="object-contain brightness-0 invert"

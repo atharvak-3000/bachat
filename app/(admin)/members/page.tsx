@@ -559,7 +559,7 @@ export default function MembersPage() {
             <div className="flex gap-3">
               <button
                 onClick={() => {
-                  navigator.clipboard.writeText(`Hi ${newMemberCreds.name},\nYour BachatBook login details are:\nPhone: ${newMemberCreds.phone}\nPassword: ${newMemberCreds.password}\nLogin at: ${window.location.origin}/sign-in`);
+                  navigator.clipboard.writeText(`Hi ${newMemberCreds.name},\nYour BachatGatOnline login details are:\nPhone: ${newMemberCreds.phone}\nPassword: ${newMemberCreds.password}\nLogin at: ${window.location.origin}/sign-in`);
                   toast.success(t.credsCopied);
                 }}
                 className="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-750 text-gray-700 dark:text-gray-300 font-semibold rounded-lg transition"

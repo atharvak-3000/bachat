@@ -151,7 +151,7 @@ export default async function MemberPassbookPage() {
         {/* Passbook Cover Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 pb-6 border-b-2 border-dashed border-[#E85D26]/30 dark:border-orange-500/20">
           <div className="space-y-1">
-            <h2 className="text-[#1B2B6B] dark:text-white font-black text-xl tracking-wide">BACHATBOOK PASSBOOK</h2>
+            <h2 className="text-[#1B2B6B] dark:text-white font-black text-xl tracking-wide">BACHATGATONLINE PASSBOOK</h2>
             <p className="text-[#E85D26] dark:text-orange-400 text-xs font-bold tracking-widest uppercase">Official Member Transaction Ledger</p>
           </div>
           <div className="text-left sm:text-right space-y-1 bg-gray-50 dark:bg-gray-950 p-4 rounded-xl border border-gray-100 dark:border-gray-850">
@@ -273,7 +273,7 @@ export default async function MemberPassbookPage() {
         {/* Audit footer */}
         <div className="flex justify-between items-center pt-8 border-t border-gray-100 dark:border-gray-800 text-[10px] text-gray-400 dark:text-gray-500 font-semibold uppercase tracking-wider">
           <span>Ledger Auto-Generated on {new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
-          <span>BachatBook System Verified Passbook</span>
+          <span>BachatGatOnline System Verified Passbook</span>
         </div>
       </div>
     </div>

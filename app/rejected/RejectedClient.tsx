@@ -35,7 +35,7 @@ export default function RejectedClient({
       contactSuperAdmin: "गटाच्या SuperAdmin शी थेट संपर्क साधा.",
       verifyInfo: "तुमची माहिती योग्य असल्याची खात्री करा.",
       signOut: "साइन आउट",
-      footer: "BachatBook · बचत गट व्यवस्थापन",
+      footer: "BachatGatOnline · बचत गट व्यवस्थापन",
     },
     en: {
       title: "Request Not Approved",
@@ -46,7 +46,7 @@ export default function RejectedClient({
       contactSuperAdmin: "Contact the group SuperAdmin directly.",
       verifyInfo: "Verify your information is correct.",
       signOut: "Sign Out",
-      footer: "BachatBook · Bachat Gat Management",
+      footer: "BachatGatOnline · Bachat Gat Management",
     }
   }
   const t = T[lang]

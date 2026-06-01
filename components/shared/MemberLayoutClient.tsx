@@ -96,7 +96,7 @@ export default function MemberLayoutClient({
       <header className="bg-[#1B2B6B] dark:bg-[#0D1021] h-14 flex items-center px-6 justify-between sticky top-0 z-50 transition-colors duration-150">
         <div className="mx-auto flex w-full max-w-4xl items-center justify-between">
           <div className="flex items-center gap-6 text-sm font-medium flex-1">
-            <span className="font-bold text-white text-lg pr-4 border-r border-white/20 mr-2">BachatBook</span>
+            <span className="font-bold text-white text-lg pr-4 border-r border-white/20 mr-2">BachatGatOnline</span>
             <div className="hidden md:flex items-center gap-6">
               {navItems.map((item) => {
                 const active = isLinkActive(item)

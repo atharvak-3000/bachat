@@ -10,7 +10,7 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "BachatBook",
+  title: "BachatGatOnline",
   description: "Modern Bachat Gat Management System",
   other: {
     'cache-control': 'no-cache',

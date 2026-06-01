@@ -104,7 +104,7 @@ export default function OnboardingPage() {
       <div className="w-full max-w-lg bg-white rounded-xl shadow-md p-8 border border-orange-100">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-orange-600">🪷 BachatBook</h1>
+          <h1 className="text-2xl font-bold text-orange-600">🪷 BachatGatOnline</h1>
           <p className="text-sm text-gray-500 mt-1">तुमचा बचत गट तयार करा</p>
         </div>
 

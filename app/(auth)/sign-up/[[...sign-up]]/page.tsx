@@ -71,7 +71,7 @@ export default function SignUpPage() {
       <div className="w-full max-w-md bg-white dark:bg-[#1A1D27] rounded-3xl shadow-xl p-8 border border-white/10 dark:border-gray-800">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-[#1B2B6B] dark:text-white flex items-center justify-center gap-2">
-            🪷 BachatBook
+            🪷 BachatGatOnline
           </h1>
           <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mt-2">
             नवीन बचत गट नोंदणी

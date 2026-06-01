@@ -13,7 +13,7 @@ export default async function PlatformLayout({ children }: { children: React.Rea
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <header className="bg-white border-b px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-6">
-          <Link href="/platform/dashboard" className="text-xl font-bold text-orange-600">BachatBook Platform</Link>
+          <Link href="/platform/dashboard" className="text-xl font-bold text-orange-600">BachatGatOnline Platform</Link>
           <nav className="flex gap-4">
             <Link href="/platform/dashboard" className="text-sm text-gray-600 hover:text-orange-600 font-medium">Dashboard</Link>
             <Link href="/platform/gats" className="text-sm text-gray-600 hover:text-orange-600 font-medium">Gats</Link>

@@ -75,7 +75,7 @@ const T = {
     ctaHeading: "आजच तुमचा बचत गट सुरू करा",
     ctaSubtitle: "मोफत सुरुवात करा — कोणतेही क्रेडिट कार्ड नाही",
     footerDesc: "मराठी बचत गटांसाठी हिशोब आणि कर्ज नियोजनाचे सर्वात सुरक्षित व सोपे डिजिटल पोर्टल.",
-    footerCopyright: "© 2026 BachatBook. सर्व हक्क राखीव.",
+    footerCopyright: "© 2026 BachatGatOnline. सर्व हक्क राखीव.",
     footerDesigned: "वेबीझ स्क्वेअर सॉफ्टवेअर सोल्युशन्स एलएलपी द्वारे डिझाइन आणि विकसित"
   },
   en: {
@@ -133,7 +133,7 @@ const T = {
     ctaHeading: "Start Your Bachat Gat Today",
     ctaSubtitle: "Start for free — no credit card required",
     footerDesc: "The most secure and easy digital portal for accounting and loan planning for Marathi Bachat Gats.",
-    footerCopyright: "© 2026 BachatBook. All rights reserved.",
+    footerCopyright: "© 2026 BachatGatOnline. All rights reserved.",
     footerDesigned: "Designed and Developed by Webiz Square Software Solutions LLP"
   }
 }
@@ -281,7 +281,7 @@ export default function LandingClient({ isAuthenticated, role, status }: Landing
             <div className="relative h-9 w-36">
               <Image 
                 src="/logo-horizontal.png"
-                alt="BachatBook"
+                alt="BachatGatOnline"
                 fill
                 sizes="144px"
                 className="object-contain dark:brightness-0 dark:invert"
@@ -643,7 +643,7 @@ export default function LandingClient({ isAuthenticated, role, status }: Landing
               <div className="relative h-8 w-32">
                 <Image 
                   src="/logo-horizontal.png"
-                  alt="BachatBook"
+                  alt="BachatGatOnline"
                   fill
                   sizes="128px"
                   className="object-contain brightness-0 invert"

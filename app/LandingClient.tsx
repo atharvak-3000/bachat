@@ -438,7 +438,7 @@ export default function LandingClient({ isAuthenticated, role, status }: Landing
         <div className="absolute top-12 right-1/4 w-96 h-96 rounded-full bg-[#2E4CAD]/20 dark:bg-blue-900/10 blur-3xl -z-10" />
         <div className="absolute bottom-12 left-10 w-80 h-80 rounded-full bg-[#E8530A]/10 dark:bg-orange-950/5 blur-3xl -z-10" />
 
-        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-16 lg:gap-24 relative z-10">
+        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-16 lg:gap-48 relative z-10">
           
           {/* Left Side: Overlapping/tilted dashboard preview images */}
           <div className="w-full lg:w-[55%] flex justify-center items-center p-4">
@@ -471,10 +471,10 @@ export default function LandingClient({ isAuthenticated, role, status }: Landing
 
           {/* Right Side: Tagline, subtitle, and CTA buttons */}
           <div className="w-full lg:w-[38%] text-center lg:text-left space-y-6 flex flex-col items-center lg:items-start">
-            {/* Badge */}
+            {/* Badge
             <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white/10 border border-white/20 rounded-full text-orange-400 dark:text-orange-300 text-xs font-bold uppercase tracking-wider mb-2">
               {t.mgmtBadge}
-            </div>
+            </div> */}
 
             {/* Heading */}
             <h1 className="text-4xl lg:text-5xl font-black text-white tracking-tight leading-normal lg:leading-normal">

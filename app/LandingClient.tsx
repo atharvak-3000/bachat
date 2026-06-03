@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
+import { useTheme } from "next-themes"
 import { 
   Menu, 
   X, 
@@ -143,6 +144,14 @@ export default function LandingClient({ isAuthenticated, role, status }: Landing
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [lang, setLang] = useState<'mr'|'en'>('mr')
+  const { resolvedTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const isDarkMode = mounted && resolvedTheme === 'dark'
 
   // Load language preference
   useEffect(() => {
@@ -423,46 +432,79 @@ export default function LandingClient({ isAuthenticated, role, status }: Landing
       </header>
 
       {/* 2. Hero Section */}
-      <section className="bg-gradient-to-br from-[#1B2B6B] via-[#2E4CAD] to-[#1B2B6B] dark:from-[#0D1021] dark:via-[#1B2B6B] dark:to-[#0D1021] text-white py-20 md:py-32 px-6 relative overflow-hidden flex-shrink-0">
+      <section className="bg-gradient-to-br from-[#1B2B6B] via-[#2E4CAD] to-[#1B2B6B] dark:from-[#0D1021] dark:via-[#1B2B6B] dark:to-[#0D1021] text-white py-20 lg:py-32 px-6 relative overflow-hidden flex-shrink-0">
         
         {/* Glow circles */}
         <div className="absolute top-12 right-1/4 w-96 h-96 rounded-full bg-[#2E4CAD]/20 dark:bg-blue-900/10 blur-3xl -z-10" />
         <div className="absolute bottom-12 left-10 w-80 h-80 rounded-full bg-[#E8530A]/10 dark:bg-orange-950/5 blur-3xl -z-10" />
 
-        <div className="max-w-4xl mx-auto text-center space-y-6 relative">
+        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-16 lg:gap-12 relative z-10">
           
-          {/* Badge */}
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white/10 border border-white/20 rounded-full text-orange-400 dark:text-orange-300 text-xs font-bold uppercase tracking-wider mb-2">
-            {t.mgmtBadge}
+          {/* Left Side: Overlapping/tilted dashboard preview images */}
+          <div className="w-full lg:w-[60%] flex justify-center items-center p-4">
+            <div className="relative flex items-center justify-center w-full max-w-[480px] lg:max-w-none">
+              {/* Desktop Preview */}
+              <div className="relative w-[75%] aspect-[1911/871] rounded-2xl overflow-hidden shadow-2xl border border-white/10 transition-all duration-300 ease-out transform -rotate-3 hover:rotate-0 hover:scale-[1.03] hover:z-20 origin-center cursor-pointer">
+                <Image
+                  src={isDarkMode ? "/Dashboard_dark_desktop.png" : "/Dashboard_light_desktop.png"}
+                  alt="Desktop Dashboard Preview"
+                  fill
+                  sizes="(max-width: 1024px) 70vw, 40vw"
+                  className="object-cover"
+                  priority
+                />
+              </div>
+              
+              {/* Mobile Preview */}
+              <div className="absolute right-0 w-[28%] aspect-[476/753] rounded-[24px] overflow-hidden shadow-2xl border border-white/10 transition-all duration-300 ease-out transform rotate-6 hover:rotate-0 hover:scale-[1.03] hover:z-20 origin-center cursor-pointer">
+                <Image
+                  src={isDarkMode ? "/Dashboard_dark_mobile.png" : "/Dashboard_light_mobile.png"}
+                  alt="Mobile Dashboard Preview"
+                  fill
+                  sizes="(max-width: 1024px) 25vw, 15vw"
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            </div>
           </div>
 
-          {/* Heading */}
-          <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight leading-normal md:leading-normal max-w-3xl mx-auto">
-            {t.heroHeading}
-          </h1>
+          {/* Right Side: Tagline, subtitle, and CTA buttons */}
+          <div className="w-full lg:w-[40%] text-center lg:text-left space-y-6 flex flex-col items-center lg:items-start">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white/10 border border-white/20 rounded-full text-orange-400 dark:text-orange-300 text-xs font-bold uppercase tracking-wider mb-2">
+              {t.mgmtBadge}
+            </div>
 
-          {/* Subtitle / Description Paragraph */}
-          <p className="text-blue-100 dark:text-blue-200 text-sm md:text-lg font-medium max-w-2xl mx-auto leading-relaxed">
-            {t.heroSubtitle}
-          </p>
+            {/* Heading */}
+            <h1 className="text-4xl lg:text-5xl font-black text-white tracking-tight leading-normal lg:leading-normal">
+              {t.heroHeading}
+            </h1>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
-            {isAuthenticated ? (
-              <button
-                onClick={handleCTA}
-                className="bg-[#E8530A] hover:bg-[#C94208] shadow-lg hover:shadow-xl hover:scale-105 transition-all px-10 py-4 rounded-2xl text-white font-extrabold text-base"
-              >
-                {t.goToDashboard}
-              </button>
-            ) : (
-              <button
-                onClick={handleSignIn}
-                className="bg-[#E8530A] hover:bg-[#C94208] shadow-lg hover:shadow-xl hover:scale-105 transition-all px-10 py-4 rounded-2xl text-white font-extrabold text-base"
-              >
-                {t.signInOrRegister}
-              </button>
-            )}
+            {/* Subtitle / Description Paragraph */}
+            <p className="text-blue-100 dark:text-blue-200 text-sm md:text-base font-medium leading-relaxed">
+              {t.heroSubtitle}
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center pt-2 w-full">
+              {isAuthenticated ? (
+                <button
+                  onClick={handleCTA}
+                  className="bg-[#E8530A] hover:bg-[#C94208] shadow-lg hover:shadow-xl hover:scale-105 transition-all px-10 py-4 rounded-2xl text-white font-extrabold text-base w-full sm:w-auto"
+                >
+                  {t.goToDashboard}
+                </button>
+              ) : (
+                <button
+                  onClick={handleSignIn}
+                  className="bg-[#E8530A] hover:bg-[#C94208] shadow-lg hover:shadow-xl hover:scale-105 transition-all px-10 py-4 rounded-2xl text-white font-extrabold text-base w-full sm:w-auto"
+                >
+                  {t.signInOrRegister}
+                </button>
+              )}
+            </div>
           </div>
+
         </div>
       </section>
 

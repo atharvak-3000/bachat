@@ -444,25 +444,25 @@ export default function LandingClient({ isAuthenticated, role, status }: Landing
           <div className="w-full lg:w-[60%] flex justify-center items-center p-4">
             <div className="relative flex items-center justify-center w-full max-w-[640px] lg:max-w-none">
               {/* Desktop Preview */}
-              <div className="relative transition-all duration-300 ease-out transform rotate-[-6deg] hover:rotate-0 hover:scale-105 z-10">
+              <div className="relative transition-all duration-300 ease-out transform rotate-[-6deg] hover:rotate-0 hover:scale-105 z-10 w-full max-w-[780px]">
                 <Image
                   src={isDarkMode ? "/Dashboard_dark_desktop.png" : "/Dashboard_light_desktop.png"}
                   alt="Desktop Dashboard Preview"
-                  width={580}
-                  height={380}
-                  className="rounded-2xl shadow-2xl object-cover"
+                  width={780}
+                  height={480}
+                  className="rounded-2xl shadow-2xl object-cover w-full h-auto"
                   priority
                 />
               </div>
               
               {/* Mobile Preview */}
-              <div className="absolute right-0 lg:right-[-20px] transition-all duration-300 ease-out transform rotate-[4deg] hover:rotate-0 hover:scale-105 z-20">
+              <div className="absolute right-0 lg:right-[-20px] transition-all duration-300 ease-out transform rotate-[4deg] hover:rotate-0 hover:scale-105 z-20 w-[30%] max-w-[220px]">
                 <Image
                   src={isDarkMode ? "/Dashboard_dark_mobile.png" : "/Dashboard_light_mobile.png"}
                   alt="Mobile Dashboard Preview"
                   width={220}
                   height={380}
-                  className="rounded-2xl shadow-2xl object-cover"
+                  className="rounded-2xl shadow-2xl object-cover w-full h-auto"
                   priority
                 />
               </div>

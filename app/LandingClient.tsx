@@ -442,27 +442,27 @@ export default function LandingClient({ isAuthenticated, role, status }: Landing
           
           {/* Left Side: Overlapping/tilted dashboard preview images */}
           <div className="w-full lg:w-[60%] flex justify-center items-center p-4">
-            <div className="relative flex items-center justify-center w-full max-w-[480px] lg:max-w-none">
+            <div className="relative flex items-center justify-center w-full max-w-[640px] lg:max-w-none">
               {/* Desktop Preview */}
-              <div className="relative w-[75%] aspect-[1911/871] rounded-2xl overflow-hidden shadow-2xl border border-white/10 transition-all duration-300 ease-out transform -rotate-3 hover:rotate-0 hover:scale-[1.03] hover:z-20 origin-center cursor-pointer">
+              <div className="relative transition-all duration-300 ease-out transform rotate-[-6deg] hover:rotate-0 hover:scale-105 z-10">
                 <Image
                   src={isDarkMode ? "/Dashboard_dark_desktop.png" : "/Dashboard_light_desktop.png"}
                   alt="Desktop Dashboard Preview"
-                  fill
-                  sizes="(max-width: 1024px) 70vw, 40vw"
-                  className="object-cover"
+                  width={580}
+                  height={380}
+                  className="rounded-2xl shadow-2xl object-cover"
                   priority
                 />
               </div>
               
               {/* Mobile Preview */}
-              <div className="absolute right-0 w-[28%] aspect-[476/753] rounded-[24px] overflow-hidden shadow-2xl border border-white/10 transition-all duration-300 ease-out transform rotate-6 hover:rotate-0 hover:scale-[1.03] hover:z-20 origin-center cursor-pointer">
+              <div className="absolute right-0 lg:right-[-20px] transition-all duration-300 ease-out transform rotate-[4deg] hover:rotate-0 hover:scale-105 z-20">
                 <Image
                   src={isDarkMode ? "/Dashboard_dark_mobile.png" : "/Dashboard_light_mobile.png"}
                   alt="Mobile Dashboard Preview"
-                  fill
-                  sizes="(max-width: 1024px) 25vw, 15vw"
-                  className="object-cover"
+                  width={220}
+                  height={380}
+                  className="rounded-2xl shadow-2xl object-cover"
                   priority
                 />
               </div>

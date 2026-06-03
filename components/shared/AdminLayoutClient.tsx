@@ -265,18 +265,18 @@ export default function AdminLayoutClient({
       </main>
 
       {/* Bottom Nav for Mobile */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#E5E7EB] z-30 flex justify-around py-2">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-[#1A1D27] border-t border-[#E5E7EB] dark:border-gray-700 z-30 flex justify-around py-2 transition-colors duration-150">
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href)
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center gap-0.5 flex-1 py-1 px-2 ${
-                isActive ? 'text-[#E85D26]' : 'text-gray-500'
+              className={`flex flex-col items-center gap-0.5 flex-1 py-1 px-2 transition-colors duration-150 ${
+                isActive ? 'text-[#E85D26]' : 'text-gray-500 dark:text-gray-400'
               }`}
             >
-              <div className={`${isActive ? 'text-[#E85D26]' : 'text-gray-400'}`}>
+              <div className={`${isActive ? 'text-[#E85D26]' : 'text-gray-400 dark:text-gray-500'} transition-colors duration-150`}>
                 {item.icon}
               </div>
               <span className="text-[10px] font-medium tracking-tight truncate max-w-[64px]">

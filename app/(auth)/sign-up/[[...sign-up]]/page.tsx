@@ -67,7 +67,13 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1B2B6B] to-[#2E4099] dark:from-[#0D1021] dark:to-[#0F1117] px-4 py-12 transition-colors duration-250">
+    <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1B2B6B] to-[#2E4099] dark:from-[#0D1021] dark:to-[#0F1117] px-4 py-12 transition-colors duration-250">
+      <Link
+        href="/"
+        className="absolute top-4 left-4 flex items-center gap-1.5 text-sm text-white/70 hover:text-white transition"
+      >
+        ← Home / मुख्यपृष्ठ
+      </Link>
       <div className="w-full max-w-md bg-white dark:bg-[#1A1D27] rounded-3xl shadow-xl p-8 border border-white/10 dark:border-gray-800">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-[#1B2B6B] dark:text-white flex items-center justify-center gap-2">

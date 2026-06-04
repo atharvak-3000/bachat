@@ -4,7 +4,7 @@ import { NextResponse, type NextRequest } from "next/server"
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 
-const PUBLIC_ROUTES = ["/", "/sign-in", "/sign-up", "/auth/callback", "/join", "/pending", "/rejected", "/forgot-password", "/reset-password", "/auth/confirm"]
+const PUBLIC_ROUTES = ["/", "/sign-in", "/sign-up", "/auth/callback", "/join", "/pending", "/rejected", "/forgot-password", "/reset-password", "/auth/confirm", "/api/subscription/", "/api/cron/"]
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })

@@ -14,6 +14,8 @@ const PUBLIC_PREFIXES = [
   '/api/organizations/by-code',
   '/api/organizations/join',
   '/api/auth',
+  '/api/subscription/',
+  '/api/cron/',
   '/_next',
   '/favicon',
 ]

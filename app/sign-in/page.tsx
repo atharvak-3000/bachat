@@ -246,7 +246,7 @@ export default function SignInPage() {
             className="w-full flex items-center gap-4 p-5 bg-white dark:bg-[#1A1D27] border border-transparent dark:border-gray-800 rounded-2xl hover:border-[#E85D26] hover:bg-orange-50/50 dark:hover:bg-orange-950/10 transition-all active:scale-[0.98] text-left shadow-sm"
           >
             <div className="w-14 h-14 bg-orange-100 dark:bg-orange-950/20 text-[#E85D26] rounded-2xl flex items-center justify-center shrink-0">
-              <span className="text-3xl">👑</span>
+              <Image src="/Bachat Gat icons/Superadmin.svg" alt="Superadmin" width={32} height={32} />
             </div>
             <div>
               <p className="font-bold text-gray-900 dark:text-white text-lg">{t.superadmin}</p>
@@ -260,7 +260,7 @@ export default function SignInPage() {
             className="w-full flex items-center gap-4 p-5 bg-white dark:bg-[#1A1D27] border border-transparent dark:border-gray-800 rounded-2xl hover:border-[#E85D26] hover:bg-orange-50/50 dark:hover:bg-orange-950/10 transition-all active:scale-[0.98] text-left shadow-sm"
           >
             <div className="w-14 h-14 bg-orange-100 dark:bg-orange-950/20 text-[#E85D26] rounded-2xl flex items-center justify-center shrink-0">
-              <span className="text-3xl">👤</span>
+              <Image src="/Bachat Gat icons/Member.svg" alt="Member" width={32} height={32} />
             </div>
             <div>
               <p className="font-bold text-gray-900 dark:text-white text-lg">{t.member}</p>
@@ -291,7 +291,12 @@ export default function SignInPage() {
         <div className="bg-white dark:bg-[#1A1D27] rounded-3xl border border-white/10 dark:border-gray-800 shadow-xl p-8">
           <div className="flex items-center gap-3 mb-6">
             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${isMember ? 'bg-orange-100 dark:bg-orange-950/20 text-[#E85D26]' : 'bg-blue-50 dark:bg-blue-950/20 text-[#1B2B6B] dark:text-blue-400'}`}>
-              <span className="text-2xl">{isMember ? '👤' : '👑'}</span>
+              <Image 
+                src={isMember ? "/Bachat Gat icons/Member.svg" : "/Bachat Gat icons/Superadmin.svg"} 
+                alt={isMember ? "Member" : "Superadmin"} 
+                width={28} 
+                height={28} 
+              />
             </div>
             <div>
               <h2 className="text-xl font-bold text-[#1B2B6B] dark:text-white">

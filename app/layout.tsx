@@ -12,9 +12,6 @@ export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
   title: "BachatGatOnline",
   description: "Modern Bachat Gat Management System",
-  icons: {
-    icon: "/favicon.png",
-  },
   other: {
     'cache-control': 'no-cache',
   },

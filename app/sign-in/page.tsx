@@ -173,12 +173,12 @@ export default function SignInPage() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-10 flex flex-col items-center">
-          <div className="relative h-12 w-48 mb-2">
+          <div className="relative h-16 w-64 mb-2">
             <Image
               src="/logo-horizontal.png"
               alt="BachatGatOnline"
               fill
-              sizes="192px"
+              sizes="256px"
               className="object-contain brightness-0 invert"
               priority
             />

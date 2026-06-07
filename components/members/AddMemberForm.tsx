@@ -28,6 +28,12 @@ export default function AddMemberForm({ isOpen, onClose, onSuccess }: Props) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [limitError, setLimitError] = useState<{
+    error: string
+    message: string
+    currentPlan: string
+    maxMembers: number
+  } | null>(null)
   const [form, setForm] = useState({
     name: "",
     name_marathi: "",
@@ -53,6 +59,7 @@ export default function AddMemberForm({ isOpen, onClose, onSuccess }: Props) {
         setLang(stored)
       }
     }
+    setLimitError(null)
   }, [isOpen])
 
   const T = {
@@ -151,7 +158,13 @@ export default function AddMemberForm({ isOpen, onClose, onSuccess }: Props) {
       })
       
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || "Failed to create member")
+      if (!res.ok) {
+        if (data.error === "MEMBER_LIMIT_REACHED") {
+          setLimitError(data)
+          return
+        }
+        throw new Error(data.error || "Failed to create member")
+      }
       
       toast.success(`${form.name} ${lang === 'mr' ? 'यशस्वीरित्या जोडले गेले!' : 'successfully added!'}`)
       
@@ -229,6 +242,36 @@ export default function AddMemberForm({ isOpen, onClose, onSuccess }: Props) {
               <strong>{t.tipTitle}</strong> {t.tipDesc}
             </p>
           </div>
+
+          {/* Limit Error Banner */}
+          {limitError && (
+            <div className="bg-red-50 dark:bg-red-950/20 border-2 border-red-500/20 rounded-xl p-4 space-y-3 flex flex-col items-center text-center animate-in fade-in duration-200">
+              <div className="flex items-center gap-2 text-red-600 dark:text-red-500 font-bold text-sm">
+                <AlertCircle size={18} />
+                <span>
+                  {lang === 'mr' 
+                    ? "सदस्य मर्यादा पोहोचली! योजना अपग्रेड करा" 
+                    : "Member limit reached! Please upgrade your plan"}
+                </span>
+              </div>
+              <p className="text-xs text-red-700 dark:text-red-300 font-semibold leading-relaxed">
+                {lang === 'mr'
+                  ? `आपल्या चालू योजनेची (${limitError.currentPlan}) सदस्य मर्यादा ${limitError.maxMembers} पूर्ण झाली आहे.`
+                  : `Your current plan (${limitError.currentPlan}) limit of ${limitError.maxMembers} members has been reached.`}
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  onClose()
+                  router.push("/subscribe")
+                }}
+                className="w-full sm:w-auto px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl text-xs shadow-md transition-all active:scale-95 flex items-center justify-center gap-1.5"
+              >
+                <span>🚀</span>
+                <span>{lang === 'mr' ? "योजना अपग्रेड करा →" : "Upgrade Plan →"}</span>
+              </button>
+            </div>
+          )}
 
           {/* Row 1: Full name + Marathi name */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -103,6 +103,12 @@ export default function SubscribePage() {
   )
 }
 
+const getRecommendedPlanId = (count: number): "BASIC" | "STANDARD" | "PREMIUM" => {
+  if (count <= 10) return "BASIC"
+  if (count <= 15) return "STANDARD"
+  return "PREMIUM"
+}
+
 function SubscribeContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -217,7 +223,7 @@ function SubscribeContent() {
       const res = await fetch("/api/subscriptions/initiate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planId })
+        body: JSON.stringify({ plan: planId })
       })
 
       const data = await res.json()
@@ -419,18 +425,18 @@ function SubscribeContent() {
           <div className={`border rounded-3xl p-6 bg-white dark:bg-[#1A1D27] hover:scale-102 transition duration-300 flex flex-col justify-between shadow-sm relative ${
             isCurrentActivePlan("BASIC") 
               ? "border-green-500 dark:border-green-600 border-2 shadow-md ring-2 ring-green-500/20" 
-              : selectedPlan === "BASIC" 
-              ? "border-orange-500 dark:border-orange-700 border-2" 
+              : getRecommendedPlanId(memberCount) === "BASIC" 
+              ? "border-orange-500 dark:border-orange-700 border-2 shadow-md" 
               : "border-orange-100 dark:border-gray-800"
           } ${memberCount > 10 ? "opacity-60" : ""}`}>
             
             {isCurrentActivePlan("BASIC") ? (
               <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-[8px] font-black uppercase px-3.5 py-1 rounded-full tracking-wider shadow">
-                {t.currentPlanBadge}
+                {lang === "mr" ? "चालू योजना ✓" : "Current Plan ✓"}
               </span>
-            ) : selectedPlan === "BASIC" ? (
-              <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-orange-600 text-white text-[8px] font-black uppercase px-3.5 py-1 rounded-full tracking-wider shadow">
-                {lang === "mr" ? "तुमची शिफारस" : "Your Fit"}
+            ) : getRecommendedPlanId(memberCount) === "BASIC" ? (
+              <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-orange-600 text-white text-[8px] font-black uppercase px-3.5 py-1 rounded-full tracking-wider shadow animate-pulse">
+                {lang === "mr" ? "शिफारस केलेले" : "Recommended"}
               </span>
             ) : null}
 
@@ -460,7 +466,7 @@ function SubscribeContent() {
               {memberCount > 10 ? (
                 <div className="text-[10px] text-red-600 dark:text-red-400 font-bold mb-3 leading-relaxed flex items-start gap-1">
                   <span>⚠️</span>
-                  <span>{t.restrictedBasic}</span>
+                  <span>{lang === "mr" ? "तुमच्याकडे या योजनेच्या मर्यादेपेक्षा जास्त सदस्य आहेत" : "You have more members than this plan allows"}</span>
                 </div>
               ) : null}
               <button 
@@ -475,9 +481,9 @@ function SubscribeContent() {
                 {loading && selectedPlan === "BASIC" ? (
                   <RefreshCw className="w-4 h-4 animate-spin" />
                 ) : isCurrentActivePlan("BASIC") ? (
-                  t.currentPlanBadge
+                  lang === "mr" ? "चालू योजना ✓" : "Current Plan ✓"
                 ) : (
-                  t.upgradeBtn
+                  lang === "mr" ? "निवडा (Select)" : "Select"
                 )}
               </button>
             </div>
@@ -487,18 +493,18 @@ function SubscribeContent() {
           <div className={`border rounded-3xl p-6 bg-white dark:bg-[#1A1D27] hover:scale-102 transition duration-300 flex flex-col justify-between shadow-lg relative ${
             isCurrentActivePlan("STANDARD") 
               ? "border-green-500 dark:border-green-600 border-2 shadow-md ring-2 ring-green-500/20" 
-              : selectedPlan === "STANDARD" 
-              ? "border-orange-500 dark:border-orange-700 border-2" 
+              : getRecommendedPlanId(memberCount) === "STANDARD" 
+              ? "border-orange-500 dark:border-orange-700 border-2 shadow-md" 
               : "border-orange-100 dark:border-gray-800"
           } ${memberCount > 15 ? "opacity-60" : ""}`}>
 
             {isCurrentActivePlan("STANDARD") ? (
               <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-[8px] font-black uppercase px-3.5 py-1 rounded-full tracking-wider shadow">
-                {t.currentPlanBadge}
+                {lang === "mr" ? "चालू योजना ✓" : "Current Plan ✓"}
               </span>
-            ) : selectedPlan === "STANDARD" ? (
-              <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-orange-600 text-white text-[8px] font-black uppercase px-3.5 py-1 rounded-full tracking-wider shadow">
-                {lang === "mr" ? "तुमची शिफारस" : "Your Fit"}
+            ) : getRecommendedPlanId(memberCount) === "STANDARD" ? (
+              <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-orange-600 text-white text-[8px] font-black uppercase px-3.5 py-1 rounded-full tracking-wider shadow animate-pulse">
+                {lang === "mr" ? "शिफारस केलेले" : "Recommended"}
               </span>
             ) : null}
 
@@ -528,7 +534,7 @@ function SubscribeContent() {
               {memberCount > 15 ? (
                 <div className="text-[10px] text-red-600 dark:text-red-400 font-bold mb-3 leading-relaxed flex items-start gap-1">
                   <span>⚠️</span>
-                  <span>{t.restrictedStandard}</span>
+                  <span>{lang === "mr" ? "तुमच्याकडे या योजनेच्या मर्यादेपेक्षा जास्त सदस्य आहेत" : "You have more members than this plan allows"}</span>
                 </div>
               ) : null}
               <button 
@@ -543,9 +549,9 @@ function SubscribeContent() {
                 {loading && selectedPlan === "STANDARD" ? (
                   <RefreshCw className="w-4 h-4 animate-spin" />
                 ) : isCurrentActivePlan("STANDARD") ? (
-                  t.currentPlanBadge
+                  lang === "mr" ? "चालू योजना ✓" : "Current Plan ✓"
                 ) : (
-                  t.upgradeBtn
+                  lang === "mr" ? "निवडा (Select)" : "Select"
                 )}
               </button>
             </div>
@@ -555,18 +561,18 @@ function SubscribeContent() {
           <div className={`border rounded-3xl p-6 bg-white dark:bg-[#1A1D27] hover:scale-102 transition duration-300 flex flex-col justify-between shadow-sm relative ${
             isCurrentActivePlan("PREMIUM") 
               ? "border-green-500 dark:border-green-600 border-2 shadow-md ring-2 ring-green-500/20" 
-              : selectedPlan === "PREMIUM" 
-              ? "border-orange-500 dark:border-orange-700 border-2" 
+              : getRecommendedPlanId(memberCount) === "PREMIUM" 
+              ? "border-orange-500 dark:border-orange-700 border-2 shadow-md" 
               : "border-orange-100 dark:border-gray-800"
           }`}>
 
             {isCurrentActivePlan("PREMIUM") ? (
               <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-[8px] font-black uppercase px-3.5 py-1 rounded-full tracking-wider shadow">
-                {t.currentPlanBadge}
+                {lang === "mr" ? "चालू योजना ✓" : "Current Plan ✓"}
               </span>
-            ) : selectedPlan === "PREMIUM" ? (
-              <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-orange-600 text-white text-[8px] font-black uppercase px-3.5 py-1 rounded-full tracking-wider shadow">
-                {lang === "mr" ? "तुमची शिफारस" : "Your Fit"}
+            ) : getRecommendedPlanId(memberCount) === "PREMIUM" ? (
+              <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-orange-600 text-white text-[8px] font-black uppercase px-3.5 py-1 rounded-full tracking-wider shadow animate-pulse">
+                {lang === "mr" ? "शिफारस केलेले" : "Recommended"}
               </span>
             ) : null}
 
@@ -605,9 +611,9 @@ function SubscribeContent() {
                 {loading && selectedPlan === "PREMIUM" ? (
                   <RefreshCw className="w-4 h-4 animate-spin" />
                 ) : isCurrentActivePlan("PREMIUM") ? (
-                  t.currentPlanBadge
+                  lang === "mr" ? "चालू योजना ✓" : "Current Plan ✓"
                 ) : (
-                  t.upgradeBtn
+                  lang === "mr" ? "निवडा (Select)" : "Select"
                 )}
               </button>
             </div>

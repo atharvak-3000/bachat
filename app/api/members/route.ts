@@ -36,6 +36,40 @@ export async function POST(req: Request) {
     if (!/^\d{10}$/.test(phone)) return NextResponse.json({ error: 'Invalid phone number' }, { status: 400 })
     if (password.length < 6) return NextResponse.json({ error: 'Password must be at least 6 characters' }, { status: 400 })
 
+    // Check organization active member limits if subscription is ACTIVE or TRIAL
+    const { data: org, error: orgError } = await supabase
+      .from("organizations")
+      .select("max_members, subscription_plan, subscription_status")
+      .eq("id", performer.organization_id)
+      .single()
+
+    if (orgError || !org) {
+      return NextResponse.json({ error: "Organization not found" }, { status: 404 })
+    }
+
+    if (org.subscription_status === "ACTIVE" || org.subscription_status === "TRIAL") {
+      const { count, error: countError } = await supabase
+        .from("members")
+        .select("id", { count: "exact", head: true })
+        .eq("organization_id", performer.organization_id)
+        .eq("status", "ACTIVE")
+
+      if (countError) {
+        return NextResponse.json({ error: "Failed to count active members" }, { status: 500 })
+      }
+
+      const activeMembers = count || 0
+      const maxMembers = org.max_members || 10
+      if (activeMembers >= maxMembers) {
+        return NextResponse.json({
+          error: "MEMBER_LIMIT_REACHED",
+          message: "You have reached your plan limit. Please upgrade your subscription.",
+          currentPlan: org.subscription_plan || "BASIC",
+          maxMembers: maxMembers
+        }, { status: 403 })
+      }
+    }
+
     // Validation: Check if a member with this phone number already exists in this Gat
     const { data: existingPhone } = await supabase
       .from("members")

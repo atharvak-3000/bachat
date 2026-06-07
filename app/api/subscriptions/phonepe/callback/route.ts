@@ -3,7 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin"
 import { generateStatusChecksum, MERCHANT_ID, BASE_URL } from "@/lib/phonepe"
 
 export async function GET(req: Request) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
+  const appUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
   
   try {
     const { searchParams } = new URL(req.url)

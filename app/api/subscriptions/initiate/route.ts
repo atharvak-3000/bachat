@@ -84,7 +84,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: `Failed to create subscription record: ${insertError.message}` }, { status: 500 })
     }
 
-    const appUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
+    const host = req.headers.get("x-forwarded-host") || req.headers.get("host")
+    const proto = req.headers.get("x-forwarded-proto") || "http"
+    const appUrl = host 
+      ? `${proto}://${host}` 
+      : (process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000")
     const redirectUrl = `${appUrl}/api/subscriptions/phonepe/callback?transactionId=${merchantTransactionId}`
     const callbackUrl = `${appUrl}/api/subscriptions/phonepe/webhook`
 

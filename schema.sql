@@ -28,6 +28,8 @@ CREATE TABLE IF NOT EXISTS public.organizations (
     subscription_plan VARCHAR(50) DEFAULT 'FREE' NOT NULL,
     subscription_status VARCHAR(50) DEFAULT 'ACTIVE' NOT NULL,
     subscription_expires_at TIMESTAMPTZ,
+    trial_ends_at TIMESTAMPTZ,
+    max_members INTEGER DEFAULT 10,
     is_approved BOOLEAN DEFAULT FALSE NOT NULL, -- Admin approval required
     is_email_verified BOOLEAN DEFAULT FALSE NOT NULL,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL
@@ -234,3 +236,23 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO postgres, anon,
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO postgres, anon, authenticated, service_role;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON FUNCTIONS TO postgres, anon, authenticated, service_role;
 
+-- ==========================================
+-- 12. SUBSCRIPTIONS
+-- ==========================================
+CREATE TABLE IF NOT EXISTS public.subscriptions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    organization_id UUID NOT NULL REFERENCES public.organizations(id) ON DELETE CASCADE,
+    plan VARCHAR(50) NOT NULL, -- 'BASIC', 'STANDARD', 'PREMIUM'
+    amount BIGINT NOT NULL, -- Stored in paise
+    max_members INTEGER NOT NULL,
+    status VARCHAR(50) DEFAULT 'PENDING' NOT NULL, -- 'PENDING', 'ACTIVE', 'FAILED', 'EXPIRED'
+    phonepe_transaction_id TEXT,
+    phonepe_merchant_transaction_id TEXT UNIQUE NOT NULL,
+    payment_method VARCHAR(50),
+    starts_at TIMESTAMPTZ,
+    expires_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ DEFAULT now() NOT NULL
+);
+
+-- Grant privileges for subscriptions table
+GRANT ALL PRIVILEGES ON TABLE public.subscriptions TO postgres, anon, authenticated, service_role;

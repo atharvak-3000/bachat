@@ -32,7 +32,7 @@ export const getCurrentMember = cache(async (): Promise<MemberWithOrg | null> =>
           id, name, group_code, village, taluka, district,
           monthly_saving_amount, default_interest_rate,
           default_penalty_amount, max_loan_limit,
-          subscription_plan, logo_url, meeting_frequency
+          subscription_plan, subscription_status, subscription_expires_at, trial_ends_at, max_members, logo_url, meeting_frequency
         )
       `)
       .eq('user_id', user.id)

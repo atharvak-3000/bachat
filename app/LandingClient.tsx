@@ -438,30 +438,30 @@ export default function LandingClient({ isAuthenticated, role, status }: Landing
         <div className="absolute top-12 right-1/4 w-96 h-96 rounded-full bg-[#2E4CAD]/20 dark:bg-blue-900/10 blur-3xl -z-10" />
         <div className="absolute bottom-12 left-10 w-80 h-80 rounded-full bg-[#E8530A]/10 dark:bg-orange-950/5 blur-3xl -z-10" />
 
-        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-16 lg:gap-48 relative z-10">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16 lg:gap-8 relative z-10">
           
           {/* Left Side: Overlapping/tilted dashboard preview images */}
-          <div className="w-full lg:w-[55%] flex justify-center items-center p-4">
+          <div className="w-full lg:w-[65%] flex justify-center items-center p-4">
             <div className="relative flex items-center justify-center w-full max-w-[640px] lg:max-w-none">
               {/* Desktop Preview */}
-              <div className="relative transition-all duration-300 ease-out transform rotate-[-6deg] hover:rotate-0 hover:scale-105 z-10 w-full max-w-[780px]">
+              <div className="relative transition-all duration-300 ease-out transform rotate-[-6deg] hover:rotate-0 hover:scale-105 z-10 w-full max-w-[900px]">
                 <Image
                   src={isDarkMode ? "/Dashboard_dark_desktop.png" : "/Dashboard_light_desktop.png"}
                   alt="Desktop Dashboard Preview"
-                  width={780}
-                  height={480}
+                  width={900}
+                  height={550}
                   className="rounded-2xl shadow-2xl object-cover w-full h-auto"
                   priority
                 />
               </div>
               
               {/* Mobile Preview */}
-              <div className="absolute right-0 lg:right-[-20px] transition-all duration-300 ease-out transform rotate-[4deg] hover:rotate-0 hover:scale-105 z-20 w-[30%] max-w-[220px]">
+              <div className="absolute right-0 lg:right-[-25px] transition-all duration-300 ease-out transform rotate-[4deg] hover:rotate-0 hover:scale-105 z-20 w-[30%] max-w-[250px]">
                 <Image
                   src={isDarkMode ? "/Dashboard_dark_mobile.png" : "/Dashboard_light_mobile.png"}
                   alt="Mobile Dashboard Preview"
-                  width={220}
-                  height={380}
+                  width={250}
+                  height={430}
                   className="rounded-2xl shadow-2xl object-cover w-full h-auto"
                   priority
                 />
@@ -470,7 +470,7 @@ export default function LandingClient({ isAuthenticated, role, status }: Landing
           </div>
 
           {/* Right Side: Tagline, subtitle, and CTA buttons */}
-          <div className="w-full lg:w-[38%] text-center lg:text-left space-y-6 flex flex-col items-center lg:items-start">
+          <div className="w-full lg:w-[31%] text-center lg:text-left space-y-6 flex flex-col items-center lg:items-start">
             {/* Badge
             <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white/10 border border-white/20 rounded-full text-orange-400 dark:text-orange-300 text-xs font-bold uppercase tracking-wider mb-2">
               {t.mgmtBadge}

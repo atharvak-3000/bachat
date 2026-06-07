@@ -19,9 +19,17 @@ export default async function SettingsPage() {
     .eq("organization_id", performer.organization_id)
     .eq("role", "SUPERADMIN")
 
+  // Count active members in this organization
+  const { count: activeMemberCount } = await supabase
+    .from("members")
+    .select("*", { count: "exact", head: true })
+    .eq("organization_id", performer.organization_id)
+    .eq("status", "ACTIVE")
+
   return <SettingsClient 
     organization={performer.organization} 
     orgId={performer.organization_id} 
     admins={admins || []} 
+    activeMemberCount={activeMemberCount || 0}
   />
 }

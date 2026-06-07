@@ -21,6 +21,8 @@ export interface Organization {
   subscription_plan: string;
   subscription_status: string;
   subscription_expires_at?: string;
+  trial_ends_at?: string;
+  max_members?: number;
   is_approved: boolean;
   is_email_verified?: boolean;
   logo_url?: string;

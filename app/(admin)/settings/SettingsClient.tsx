@@ -7,11 +7,13 @@ import { useRouter } from "next/navigation"
 export default function SettingsClient({ 
   organization, 
   orgId, 
-  admins 
+  admins,
+  activeMemberCount = 0
 }: { 
   organization: Organization, 
   orgId: string, 
-  admins: Member[] 
+  admins: Member[],
+  activeMemberCount: number
 }) {
   const router = useRouter()
   
@@ -90,6 +92,7 @@ export default function SettingsClient({
       upgradeTitle: "तुमची योजना अपग्रेड करा",
       upgradeSub: "अधिक सदस्य आणि प्रीमियम वैशिष्ट्यांमध्ये प्रवेश मिळवा.",
       comingSoon: "लवकरच येत आहे",
+      upgradeBtn: "PhonePe द्वारे अपग्रेड करा",
       adminHeader: "अॅडमिन व्यवस्थापन",
       currentAdmins: "सध्याचे अॅडमिन",
       removeAdmin: "अॅडमिन काढा",
@@ -140,6 +143,7 @@ export default function SettingsClient({
       upgradeTitle: "Upgrade your plan",
       upgradeSub: "Get access to more members and premium features.",
       comingSoon: "Coming Soon",
+      upgradeBtn: "Upgrade via PhonePe",
       adminHeader: "Admin Management",
       currentAdmins: "Current Admins",
       removeAdmin: "Remove Admin",
@@ -276,6 +280,53 @@ export default function SettingsClient({
       router.refresh()
     } catch (err: any) {
       alert(err.message)
+    }
+  }
+
+  const getMaxMembers = (plan: string) => {
+    if (plan === "BASIC") return 10
+    if (plan === "STANDARD") return 15
+    return 999999
+  }
+  const maxLimit = getMaxMembers(organization.subscription_plan)
+  const maxLimitStr = maxLimit === 999999 ? (lang === 'mr' ? "अमर्यादित" : "Unlimited") : maxLimit
+
+  const getDaysRemainingText = (expiresAt?: string | null) => {
+    if (!expiresAt) return lang === 'mr' ? "अपग्रेड आवश्यक" : "Upgrade Required"
+    const diffTime = new Date(expiresAt).getTime() - Date.now()
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    if (diffDays <= 0) {
+      return lang === 'mr' ? "मुदत संपली" : "Expired"
+    }
+    if (diffDays === 1) {
+      return lang === 'mr' ? "उद्या देय" : "Due tomorrow"
+    }
+    return lang === 'mr' 
+      ? `${diffDays} दिवसांत देय` 
+      : `Due in ${diffDays} days`
+  }
+
+  const [submittingSub, setSubmittingSub] = useState(false)
+
+  const handleUpgrade = async () => {
+    setSubmittingSub(true)
+    try {
+      const res = await fetch("/api/subscriptions/initiate", {
+        method: "POST"
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to initiate payment")
+      }
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        throw new Error("Payment URL not returned from server")
+      }
+    } catch (err: any) {
+      alert(err.message)
+    } finally {
+      setSubmittingSub(false)
     }
   }
 
@@ -447,24 +498,52 @@ export default function SettingsClient({
           <h2 className="font-semibold text-[#1B2B6B] dark:text-white">{t.subHeader}</h2>
         </div>
         <div className="p-6">
-          <div className="grid grid-cols-3 gap-4 mb-6">
-            <div className="bg-gray-50 dark:bg-gray-950 p-4 rounded-lg">
-              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">{t.plan}</p>
-              <span className="font-bold text-lg text-[#1B2B6B] dark:text-white">{organization.subscription_plan}</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            {/* 1. Plan Card */}
+            <div className="bg-gray-50 dark:bg-gray-950/40 p-5 rounded-2xl border border-gray-100 dark:border-gray-800/50 flex flex-col justify-between">
+              <div>
+                <p className="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider mb-1">
+                  {lang === 'mr' ? "सध्याची योजना" : "Current Plan"}
+                </p>
+                <span className="font-black text-xl text-[#1B2B6B] dark:text-white">
+                  {organization.subscription_plan}
+                </span>
+              </div>
+              <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-2 font-medium">
+                {lang === 'mr' ? "वर्गणी स्तर" : "Subscription Tier"}
+              </p>
             </div>
-            <div className="bg-gray-50 dark:bg-gray-950 p-4 rounded-lg">
-              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">{t.status}</p>
-              <span className={`font-bold text-lg ${organization.subscription_status === 'ACTIVE' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-                {organization.subscription_status}
-              </span>
+
+            {/* 2. Active Members count */}
+            <div className="bg-gray-50 dark:bg-gray-950/40 p-5 rounded-2xl border border-gray-100 dark:border-gray-800/50 flex flex-col justify-between">
+              <div>
+                <p className="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider mb-1">
+                  {lang === 'mr' ? "एकूण सदस्य" : "Total Members"}
+                </p>
+                <span className="font-black text-xl text-[#1B2B6B] dark:text-white">
+                  {activeMemberCount} <span className="text-sm font-semibold text-gray-400 dark:text-gray-500">/ {maxLimitStr}</span>
+                </span>
+              </div>
+              <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-2 font-medium">
+                {lang === 'mr' ? "सक्रिय / कमाल मर्यादा" : "Active / Max limit"}
+              </p>
             </div>
-            <div className="bg-gray-50 dark:bg-gray-950 p-4 rounded-lg">
-              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">{t.expires}</p>
-              <span className="font-bold text-lg text-[#1B2B6B] dark:text-white">
-                {organization.subscription_expires_at 
-                  ? new Date(organization.subscription_expires_at).toLocaleDateString('en-IN') 
-                  : 'N/A'}
-              </span>
+
+            {/* 3. Next payment / Expires */}
+            <div className="bg-gray-50 dark:bg-gray-950/40 p-5 rounded-2xl border border-gray-100 dark:border-gray-800/50 flex flex-col justify-between">
+              <div>
+                <p className="text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider mb-1">
+                  {lang === 'mr' ? "पुढील देय तारीख" : "Next Payment Due"}
+                </p>
+                <span className="font-black text-xl text-[#1B2B6B] dark:text-white">
+                  {organization.subscription_expires_at 
+                    ? new Date(organization.subscription_expires_at).toLocaleDateString('en-IN') 
+                    : 'N/A'}
+                </span>
+              </div>
+              <p className={`text-[11px] font-bold mt-2 ${organization.subscription_expires_at ? "text-orange-500 dark:text-orange-400" : "text-gray-400 dark:text-gray-500"}`}>
+                {getDaysRemainingText(organization.subscription_expires_at)}
+              </p>
             </div>
           </div>
           
@@ -473,8 +552,12 @@ export default function SettingsClient({
               <p className="font-bold text-[#1B2B6B] dark:text-white">{t.upgradeTitle}</p>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{t.upgradeSub}</p>
             </div>
-            <button className="bg-[#E85D26] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#D04E1A] transition opacity-50 cursor-not-allowed">
-              {t.comingSoon}
+            <button 
+              onClick={handleUpgrade}
+              disabled={submittingSub}
+              className="bg-[#E85D26] text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-[#D04E1A] transition active:scale-95 disabled:opacity-50 shadow-sm"
+            >
+              {submittingSub ? (lang === 'mr' ? "लोड होत आहे..." : "Loading...") : t.upgradeBtn}
             </button>
           </div>
         </div>

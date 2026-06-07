@@ -41,7 +41,7 @@ export async function POST(req: Request) {
     let planId: string | undefined
     try {
       const body = await req.json()
-      planId = body.planId
+      planId = body.plan || body.planId
     } catch {
       // Body might be empty
     }

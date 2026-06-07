@@ -22,7 +22,16 @@ export async function GET(req: Request) {
     // Retrieve subscription details to check current status
     const { data: subscription, error: subError } = await adminSupabase
       .from("subscriptions")
-      .select("id, organization_id, plan, status")
+      .select(`
+        id, 
+        organization_id, 
+        plan, 
+        status,
+        organization:organizations(
+          subscription_expires_at,
+          subscription_status
+        )
+      `)
       .eq("phonepe_merchant_transaction_id", transactionId)
       .single()
 
@@ -62,8 +71,14 @@ export async function GET(req: Request) {
 
     if (isSuccess) {
       const now = new Date()
-      const expiresAt = new Date()
-      expiresAt.setDate(now.getDate() + 30)
+      const org = (subscription as any).organization
+      const currentExpiry = org?.subscription_expires_at ? new Date(org.subscription_expires_at) : null
+      const startFrom = (currentExpiry && currentExpiry > now) ? currentExpiry : now
+      const expiresAt = new Date(startFrom.getTime() + 30 * 24 * 60 * 60 * 1000)
+
+      const { PLANS } = require("@/lib/phonepe")
+      const planDetails = PLANS[subscription.plan as keyof typeof PLANS]
+      const maxMembers = planDetails ? planDetails.maxMembers : 10
 
       // 1. Update subscription status
       const { error: updateSubError } = await adminSupabase
@@ -72,7 +87,7 @@ export async function GET(req: Request) {
           status: "ACTIVE",
           phonepe_transaction_id: responseData.data?.transactionId || null,
           payment_method: responseData.data?.paymentInstrument?.type || null,
-          starts_at: now.toISOString(),
+          starts_at: startFrom.toISOString(),
           expires_at: expiresAt.toISOString()
         })
         .eq("id", subscription.id)
@@ -85,7 +100,8 @@ export async function GET(req: Request) {
         .update({
           subscription_plan: subscription.plan,
           subscription_status: "ACTIVE",
-          subscription_expires_at: expiresAt.toISOString()
+          subscription_expires_at: expiresAt.toISOString(),
+          max_members: maxMembers
         })
         .eq("id", subscription.organization_id)
 

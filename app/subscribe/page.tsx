@@ -6,7 +6,7 @@ import { useEffect, useState, Suspense } from "react"
 import { toast } from "sonner"
 import DarkModeToggle from "@/components/ui/DarkModeToggle"
 import { formatRupees } from "@/lib/calculations"
-import { Check, ShieldAlert, BadgeCheck, ArrowRight, RefreshCw } from "lucide-react"
+import { Check, ShieldAlert, BadgeCheck, ArrowRight, RefreshCw, Trophy } from "lucide-react"
 
 const SUBSCRIBE_T = {
   mr: {
@@ -19,7 +19,7 @@ const SUBSCRIBE_T = {
     premiumPlan: "Premium योजना",
     payBtn: "पेमेंट करा (Pay Now) 💳",
     membersLimit: "सदस्य मर्यादा",
-    membersText: "सदस्य संख्या",
+    membersText: "सदस्य",
     priceText: "प्रति महिना",
     unlimited: "अमर्यादित",
     features: "समाविष्ट वैशिष्ट्ये",
@@ -38,6 +38,16 @@ const SUBSCRIBE_T = {
     priceBasic: "₹१५०",
     priceStandard: "₹२५०",
     pricePremium: "₹५००",
+    currentPlanTitle: "चालू योजना सारांश",
+    statusLabel: "स्थिती",
+    expiryLabel: "कालबाह्यता तारीख",
+    trialLabel: "चाचणी समाप्त तारीख",
+    membersLabel: "सदस्य संख्या",
+    currentPlanBadge: "चालू योजना",
+    upgradeBtn: "योजना बदला (Change Plan)",
+    noActivePlan: "सक्रिय योजना नाही",
+    activeStatus: "सक्रिय (Active)",
+    expiredStatus: "कालबाह्य (Expired)",
   },
   en: {
     title: "BachatGatOnline",
@@ -68,6 +78,16 @@ const SUBSCRIBE_T = {
     priceBasic: "₹150",
     priceStandard: "₹250",
     pricePremium: "₹500",
+    currentPlanTitle: "Current Plan Summary",
+    statusLabel: "Status",
+    expiryLabel: "Expiry Date",
+    trialLabel: "Trial Ends Date",
+    membersLabel: "Members Count",
+    currentPlanBadge: "Current Plan",
+    upgradeBtn: "Change Plan / Upgrade",
+    noActivePlan: "No Active Plan",
+    activeStatus: "Active",
+    expiredStatus: "Expired",
   }
 }
 
@@ -94,6 +114,13 @@ function SubscribeContent() {
   const [memberCount, setMemberCount] = useState<number>(0)
   const [orgName, setOrgName] = useState<string>("")
   const [selectedPlan, setSelectedPlan] = useState<"BASIC" | "STANDARD" | "PREMIUM">("STANDARD")
+  const [org, setOrg] = useState<{
+    subscription_plan?: string
+    subscription_status?: string
+    subscription_expires_at?: string
+    trial_ends_at?: string
+    max_members?: number
+  } | null>(null)
 
   // Load language preference
   useEffect(() => {
@@ -131,7 +158,9 @@ function SubscribeContent() {
             name,
             subscription_status,
             subscription_expires_at,
-            trial_ends_at
+            trial_ends_at,
+            subscription_plan,
+            max_members
           )
         `)
         .eq("user_id", user.id)
@@ -147,13 +176,14 @@ function SubscribeContent() {
         return
       }
 
-      const org: any = member.organization
-      if (!org) {
+      const organization: any = member.organization
+      if (!organization) {
         router.push("/onboarding")
         return
       }
 
-      setOrgName(org.name)
+      setOrgName(organization.name)
+      setOrg(organization)
 
       // Get count of active members
       const { count, error: countError } = await supabase
@@ -173,17 +203,6 @@ function SubscribeContent() {
         } else {
           setSelectedPlan("PREMIUM")
         }
-      }
-
-      // Check if subscription or trial is actually active
-      const now = new Date()
-      const hasTrial = org.subscription_status === "TRIAL" && org.trial_ends_at && new Date(org.trial_ends_at) > now
-      const hasActive = org.subscription_status === "ACTIVE" && org.subscription_expires_at && new Date(org.subscription_expires_at) > now
-
-      // If subscription is active and there's no payment status message, send to dashboard
-      if ((hasTrial || hasActive) && !paymentStatus) {
-        router.push("/dashboard")
-        return
       }
 
       setChecking(false)
@@ -217,6 +236,32 @@ function SubscribeContent() {
     }
   }
 
+  const getPlanName = (planKey?: string, status?: string) => {
+    if (!planKey || planKey.toUpperCase() === "FREE") return t.noActivePlan
+    const key = planKey.toUpperCase()
+    if (status === "TRIAL") {
+      if (key === "BASIC") return `${t.basicPlan} (${lang === "mr" ? "चाचणी" : "Trial"})`
+      if (key === "STANDARD") return `${t.standardPlan} (${lang === "mr" ? "चाचणी" : "Trial"})`
+      if (key === "PREMIUM") return `${t.premiumPlan} (${lang === "mr" ? "चाचणी" : "Trial"})`
+      return `${lang === "mr" ? "मोफत चाचणी" : "Free Trial"}`
+    }
+    if (key === "BASIC") return t.basicPlan
+    if (key === "STANDARD") return t.standardPlan
+    if (key === "PREMIUM") return t.premiumPlan
+    return key
+  }
+
+  // Calculate active subscription status
+  const now = new Date()
+  const hasTrial = org?.subscription_status === "TRIAL" && org.trial_ends_at && new Date(org.trial_ends_at) > now
+  const hasActive = org?.subscription_status === "ACTIVE" && org.subscription_expires_at && new Date(org.subscription_expires_at) > now
+  const isActive = !!(hasTrial || hasActive)
+
+  const isCurrentActivePlan = (planKey: string) => {
+    if (!org || !isActive) return false
+    return org.subscription_plan?.toUpperCase() === planKey.toUpperCase()
+  }
+
   if (checking) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-orange-50 dark:bg-[#0D1021] transition-colors duration-200">
@@ -226,7 +271,7 @@ function SubscribeContent() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-orange-50 dark:bg-[#0D1021] transition-colors duration-200">
+    <div className="min-h-screen flex flex-col justify-between bg-orange-50 dark:bg-[#0D1021] transition-colors duration-200 animate-fade-in">
       {/* Top Header Control Bar */}
       <header className="flex justify-between items-center px-6 py-4">
         <div className="flex items-center gap-2">
@@ -234,6 +279,14 @@ function SubscribeContent() {
           <span className="font-black text-lg text-[#1B2B6B] dark:text-white uppercase tracking-wider">{t.title}</span>
         </div>
         <div className="flex items-center gap-3">
+          {isActive && (
+            <button
+              onClick={() => router.push("/dashboard")}
+              className="px-4 py-2 border border-orange-200 dark:border-gray-800 text-xs font-bold text-[#1B2B6B] dark:text-white bg-white dark:bg-[#1A1D27] rounded-xl hover:bg-orange-50 dark:hover:bg-orange-950/20 active:scale-95 transition-all shadow-sm"
+            >
+              {lang === "mr" ? "डॅशबोर्ड →" : "Dashboard →"}
+            </button>
+          )}
           <button
             onClick={toggleLanguage}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-orange-200 dark:border-gray-800 text-xs font-bold text-orange-600 dark:text-orange-400 bg-white dark:bg-[#1A1D27] hover:bg-orange-50 dark:hover:bg-orange-950/20 active:scale-95 transition-all shadow-sm"
@@ -249,7 +302,7 @@ function SubscribeContent() {
       <main className="flex-1 flex flex-col items-center justify-center px-4 py-8 max-w-6xl mx-auto w-full">
         {/* Payment Success/Failed Status Banners */}
         {paymentStatus === "failed" && (
-          <div className="w-full max-w-4xl mb-6 bg-red-50 dark:bg-red-950/10 border-2 border-red-500/30 rounded-2xl p-4 flex items-start gap-3 shadow-md animate-in fade-in slide-in-from-top-4 duration-300">
+          <div className="w-full max-w-4xl mb-6 bg-red-50 dark:bg-red-950/10 border-2 border-red-500/30 rounded-2xl p-4 flex items-start gap-3 shadow-md">
             <ShieldAlert className="w-6 h-6 text-red-600 dark:text-red-500 shrink-0 mt-0.5" />
             <div>
               <h3 className="font-black text-red-800 dark:text-red-400 text-sm leading-tight">{t.paymentFailedTitle}</h3>
@@ -259,7 +312,7 @@ function SubscribeContent() {
         )}
 
         {paymentStatus === "success" && (
-          <div className="w-full max-w-4xl mb-6 bg-green-50 dark:bg-green-950/10 border-2 border-green-500/30 rounded-2xl p-4 flex items-start justify-between gap-3 shadow-md animate-in fade-in slide-in-from-top-4 duration-300">
+          <div className="w-full max-w-4xl mb-6 bg-green-50 dark:bg-green-950/10 border-2 border-green-500/30 rounded-2xl p-4 flex items-start justify-between gap-3 shadow-md">
             <div className="flex items-start gap-3">
               <BadgeCheck className="w-6 h-6 text-green-600 dark:text-green-500 shrink-0 mt-0.5" />
               <div>
@@ -276,12 +329,80 @@ function SubscribeContent() {
           </div>
         )}
 
+        {/* Current Plan Status Card */}
+        {org && (
+          <div className="w-full max-w-4xl bg-white dark:bg-[#1A1D27] rounded-3xl shadow-lg border border-orange-100 dark:border-gray-800 p-6 mb-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="space-y-3 w-full md:w-auto">
+              <div className="flex items-center gap-2">
+                <Trophy className="w-5 h-5 text-orange-500" />
+                <h2 className="text-lg font-black text-[#1B2B6B] dark:text-white uppercase tracking-wider">{t.currentPlanTitle}</h2>
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 text-sm text-gray-600 dark:text-gray-300">
+                <div>
+                  <span className="font-bold">{lang === "mr" ? "योजना:" : "Plan:"}</span>{" "}
+                  <span className="font-extrabold text-[#1B2B6B] dark:text-white bg-orange-100/50 dark:bg-orange-950/20 px-2.5 py-0.5 rounded-lg border border-orange-200/50 dark:border-orange-950/40 text-xs">
+                    {getPlanName(org.subscription_plan, org.subscription_status)}
+                  </span>
+                </div>
+                <div>
+                  <span className="font-bold">{t.statusLabel}:</span>{" "}
+                  <span className={`font-extrabold px-2.5 py-0.5 rounded-lg text-xs border ${
+                    isActive 
+                      ? "bg-green-50 dark:bg-green-950/10 border-green-500/30 text-green-700 dark:text-green-400" 
+                      : "bg-red-50 dark:bg-red-950/10 border-red-500/30 text-red-700 dark:text-red-400"
+                  }`}>
+                    {isActive ? t.activeStatus : t.expiredStatus}
+                  </span>
+                </div>
+                {org.subscription_expires_at && (
+                  <div className="sm:col-span-2">
+                    <span className="font-bold">{t.expiryLabel}:</span>{" "}
+                    <span className="font-extrabold text-[#1B2B6B] dark:text-white">
+                      {new Date(org.subscription_expires_at).toLocaleDateString(lang === "mr" ? "mr-IN" : "en-IN", {
+                        day: "numeric", month: "long", year: "numeric"
+                      })}
+                    </span>
+                  </div>
+                )}
+                {org.subscription_status === "TRIAL" && org.trial_ends_at && !org.subscription_expires_at && (
+                  <div className="sm:col-span-2">
+                    <span className="font-bold">{t.trialLabel}:</span>{" "}
+                    <span className="font-extrabold text-[#1B2B6B] dark:text-white">
+                      {new Date(org.trial_ends_at).toLocaleDateString(lang === "mr" ? "mr-IN" : "en-IN", {
+                        day: "numeric", month: "long", year: "numeric"
+                      })}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="w-full md:w-80 space-y-2">
+              <div className="flex justify-between text-xs font-bold text-gray-500 dark:text-gray-400">
+                <span>{t.membersLabel}</span>
+                <span>{memberCount} / {org.max_members || 10} {t.membersText}</span>
+              </div>
+              <div className="w-full bg-gray-100 dark:bg-gray-950 h-3 rounded-full overflow-hidden border border-gray-200/50 dark:border-gray-800/40">
+                <div 
+                  className={`h-full rounded-full transition-all duration-500 ${
+                    (memberCount / (org.max_members || 10)) > 0.9 
+                      ? "bg-red-500" 
+                      : "bg-orange-500"
+                  }`}
+                  style={{ width: `${Math.min(100, (memberCount / (org.max_members || 10)) * 100)}%` }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="text-center max-w-2xl mx-auto space-y-3 mb-8">
           <h1 className="text-3xl md:text-4xl font-black text-[#1B2B6B] dark:text-white leading-tight">
-            {t.expiredTitle}
+            {isActive ? (lang === "mr" ? "योजना व्यवस्थापित करा ⚙️" : "Manage Subscription ⚙️") : t.expiredTitle}
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-            {t.expiredSubtitle}
+            {isActive ? (lang === "mr" ? "नवीन सुविधेसाठी तुमची योजना अपग्रेड करा किंवा मुदत वाढवा." : "Upgrade to a higher tier or renew your current subscription period.") : t.expiredSubtitle}
           </p>
 
           <div className="inline-flex items-center gap-2 bg-orange-100/50 dark:bg-orange-950/20 px-4 py-2 rounded-2xl border border-orange-200/50 dark:border-orange-950/40 text-xs font-bold text-orange-700 dark:text-orange-400">
@@ -296,16 +417,22 @@ function SubscribeContent() {
           
           {/* Basic Plan */}
           <div className={`border rounded-3xl p-6 bg-white dark:bg-[#1A1D27] hover:scale-102 transition duration-300 flex flex-col justify-between shadow-sm relative ${
-            selectedPlan === "BASIC" 
+            isCurrentActivePlan("BASIC") 
+              ? "border-green-500 dark:border-green-600 border-2 shadow-md ring-2 ring-green-500/20" 
+              : selectedPlan === "BASIC" 
               ? "border-orange-500 dark:border-orange-700 border-2" 
               : "border-orange-100 dark:border-gray-800"
           } ${memberCount > 10 ? "opacity-60" : ""}`}>
             
-            {selectedPlan === "BASIC" && (
+            {isCurrentActivePlan("BASIC") ? (
+              <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-[8px] font-black uppercase px-3.5 py-1 rounded-full tracking-wider shadow">
+                {t.currentPlanBadge}
+              </span>
+            ) : selectedPlan === "BASIC" ? (
               <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-orange-600 text-white text-[8px] font-black uppercase px-3.5 py-1 rounded-full tracking-wider shadow">
                 {lang === "mr" ? "तुमची शिफारस" : "Your Fit"}
               </span>
-            )}
+            ) : null}
 
             <div>
               <h3 className="font-extrabold text-[#1B2B6B] dark:text-white text-lg mt-1">{t.basicPlan}</h3>
@@ -331,19 +458,26 @@ function SubscribeContent() {
 
             <div>
               {memberCount > 10 ? (
-                <div className="text-[10px] text-red-600 dark:text-red-400 font-bold mb-3 leading-relaxed">
-                  ⚠️ {t.restrictedBasic}
+                <div className="text-[10px] text-red-600 dark:text-red-400 font-bold mb-3 leading-relaxed flex items-start gap-1">
+                  <span>⚠️</span>
+                  <span>{t.restrictedBasic}</span>
                 </div>
               ) : null}
               <button 
                 onClick={() => handleInitiatePayment("BASIC")}
-                disabled={loading || memberCount > 10}
-                className="w-full py-3.5 bg-[#1B2B6B] hover:bg-[#15204C] dark:bg-blue-900/30 dark:hover:bg-blue-900/50 disabled:opacity-30 disabled:hover:bg-[#1B2B6B] text-white dark:text-blue-300 font-bold rounded-xl transition active:scale-95 shadow-sm flex items-center justify-center gap-2"
+                disabled={loading || memberCount > 10 || isCurrentActivePlan("BASIC")}
+                className={`w-full py-3.5 font-bold rounded-xl transition active:scale-95 shadow-sm flex items-center justify-center gap-2 ${
+                  isCurrentActivePlan("BASIC")
+                    ? "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400 cursor-default"
+                    : "bg-[#1B2B6B] hover:bg-[#15204C] dark:bg-blue-900/30 dark:hover:bg-blue-900/50 disabled:opacity-30 text-white dark:text-blue-300"
+                }`}
               >
                 {loading && selectedPlan === "BASIC" ? (
                   <RefreshCw className="w-4 h-4 animate-spin" />
+                ) : isCurrentActivePlan("BASIC") ? (
+                  t.currentPlanBadge
                 ) : (
-                  t.payBtn
+                  t.upgradeBtn
                 )}
               </button>
             </div>
@@ -351,16 +485,22 @@ function SubscribeContent() {
 
           {/* Standard Plan */}
           <div className={`border rounded-3xl p-6 bg-white dark:bg-[#1A1D27] hover:scale-102 transition duration-300 flex flex-col justify-between shadow-lg relative ${
-            selectedPlan === "STANDARD" 
+            isCurrentActivePlan("STANDARD") 
+              ? "border-green-500 dark:border-green-600 border-2 shadow-md ring-2 ring-green-500/20" 
+              : selectedPlan === "STANDARD" 
               ? "border-orange-500 dark:border-orange-700 border-2" 
               : "border-orange-100 dark:border-gray-800"
           } ${memberCount > 15 ? "opacity-60" : ""}`}>
 
-            {selectedPlan === "STANDARD" && (
+            {isCurrentActivePlan("STANDARD") ? (
+              <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-[8px] font-black uppercase px-3.5 py-1 rounded-full tracking-wider shadow">
+                {t.currentPlanBadge}
+              </span>
+            ) : selectedPlan === "STANDARD" ? (
               <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-orange-600 text-white text-[8px] font-black uppercase px-3.5 py-1 rounded-full tracking-wider shadow">
                 {lang === "mr" ? "तुमची शिफारस" : "Your Fit"}
               </span>
-            )}
+            ) : null}
 
             <div>
               <h3 className="font-extrabold text-orange-600 dark:text-orange-500 text-lg mt-1">{t.standardPlan}</h3>
@@ -386,19 +526,26 @@ function SubscribeContent() {
 
             <div>
               {memberCount > 15 ? (
-                <div className="text-[10px] text-red-600 dark:text-red-400 font-bold mb-3 leading-relaxed">
-                  ⚠️ {t.restrictedStandard}
+                <div className="text-[10px] text-red-600 dark:text-red-400 font-bold mb-3 leading-relaxed flex items-start gap-1">
+                  <span>⚠️</span>
+                  <span>{t.restrictedStandard}</span>
                 </div>
               ) : null}
               <button 
                 onClick={() => handleInitiatePayment("STANDARD")}
-                disabled={loading || memberCount > 15}
-                className="w-full py-3.5 bg-orange-600 hover:bg-orange-700 disabled:opacity-30 disabled:hover:bg-orange-600 text-white font-bold rounded-xl transition active:scale-95 shadow-md flex items-center justify-center gap-2"
+                disabled={loading || memberCount > 15 || isCurrentActivePlan("STANDARD")}
+                className={`w-full py-3.5 font-bold rounded-xl transition active:scale-95 shadow-md flex items-center justify-center gap-2 ${
+                  isCurrentActivePlan("STANDARD")
+                    ? "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400 cursor-default"
+                    : "bg-orange-600 hover:bg-orange-700 disabled:opacity-30 text-white"
+                }`}
               >
                 {loading && selectedPlan === "STANDARD" ? (
                   <RefreshCw className="w-4 h-4 animate-spin" />
+                ) : isCurrentActivePlan("STANDARD") ? (
+                  t.currentPlanBadge
                 ) : (
-                  t.payBtn
+                  t.upgradeBtn
                 )}
               </button>
             </div>
@@ -406,16 +553,22 @@ function SubscribeContent() {
 
           {/* Premium Plan */}
           <div className={`border rounded-3xl p-6 bg-white dark:bg-[#1A1D27] hover:scale-102 transition duration-300 flex flex-col justify-between shadow-sm relative ${
-            selectedPlan === "PREMIUM" 
+            isCurrentActivePlan("PREMIUM") 
+              ? "border-green-500 dark:border-green-600 border-2 shadow-md ring-2 ring-green-500/20" 
+              : selectedPlan === "PREMIUM" 
               ? "border-orange-500 dark:border-orange-700 border-2" 
               : "border-orange-100 dark:border-gray-800"
           }`}>
 
-            {selectedPlan === "PREMIUM" && (
+            {isCurrentActivePlan("PREMIUM") ? (
+              <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-[8px] font-black uppercase px-3.5 py-1 rounded-full tracking-wider shadow">
+                {t.currentPlanBadge}
+              </span>
+            ) : selectedPlan === "PREMIUM" ? (
               <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-orange-600 text-white text-[8px] font-black uppercase px-3.5 py-1 rounded-full tracking-wider shadow">
                 {lang === "mr" ? "तुमची शिफारस" : "Your Fit"}
               </span>
-            )}
+            ) : null}
 
             <div>
               <h3 className="font-extrabold text-[#1B2B6B] dark:text-white text-lg mt-1">{t.premiumPlan}</h3>
@@ -442,13 +595,19 @@ function SubscribeContent() {
             <div>
               <button 
                 onClick={() => handleInitiatePayment("PREMIUM")}
-                disabled={loading}
-                className="w-full py-3.5 bg-[#1B2B6B] hover:bg-[#15204C] dark:bg-blue-900/30 dark:hover:bg-blue-900/50 disabled:opacity-30 disabled:hover:bg-[#1B2B6B] text-white dark:text-blue-300 font-bold rounded-xl transition active:scale-95 shadow-sm flex items-center justify-center gap-2"
+                disabled={loading || isCurrentActivePlan("PREMIUM")}
+                className={`w-full py-3.5 font-bold rounded-xl transition active:scale-95 shadow-sm flex items-center justify-center gap-2 ${
+                  isCurrentActivePlan("PREMIUM")
+                    ? "bg-green-100 text-green-700 dark:bg-green-950/40 dark:text-green-400 cursor-default"
+                    : "bg-[#1B2B6B] hover:bg-[#15204C] dark:bg-blue-900/30 dark:hover:bg-blue-900/50 disabled:opacity-30 text-white dark:text-blue-300"
+                }`}
               >
                 {loading && selectedPlan === "PREMIUM" ? (
                   <RefreshCw className="w-4 h-4 animate-spin" />
+                ) : isCurrentActivePlan("PREMIUM") ? (
+                  t.currentPlanBadge
                 ) : (
-                  t.payBtn
+                  t.upgradeBtn
                 )}
               </button>
             </div>

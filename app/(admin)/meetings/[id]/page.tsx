@@ -97,7 +97,7 @@ export default function MeetingDetailPage({ params }: { params: Promise<{ id: st
       termLabel: "मुदत (महिने)",
       purposeLabel: "हेतू",
       purposePlaceholder: "उदा. वैद्यकीय",
-      adminHint: "* अॅडमिनने मंजूर केलेले &rarr; सुपरअॅडमिन मंजुरीची प्रतीक्षा | सुपरअॅडमिनने मंजूर केलेले &rarr; स्वयंचलित मंजूर",
+      adminHint: "* अध्यक्षांनी मंजूर केलेले &rarr; सुपरअध्यक्ष मंजुरीची प्रतीक्षा | सुपरअध्यक्षांनी मंजूर केलेले &rarr; स्वयंचलित मंजूर",
       issueLoanBtn: "कर्ज मंजूर करा",
       loansListHeader: "सदस्य",
       loansListAmount: "रक्कम",

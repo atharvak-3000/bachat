@@ -51,7 +51,7 @@ export default function SignInPage() {
       signIn: 'साइन इन करा',
       signingIn: 'साइन इन करत आहे...',
       back: '← मागे',
-      invalidMember: 'अवैध फोन नंबर किंवा पासवर्ड. तुमच्या गट अॅडमिनशी संपर्क साधा.',
+      invalidMember: 'अवैध फोन नंबर किंवा पासवर्ड. तुमच्या गट अध्यक्षांशी संपर्क साधा.',
       invalidAdmin: 'अवैध ईमेल किंवा पासवर्ड.',
       noCredentials: 'लॉगिन माहिती नाही? तुमच्या गट महाध्यक्षांना विचारा.',
       logoSub: 'बचत गट व्यवस्थापन',
@@ -59,7 +59,7 @@ export default function SignInPage() {
       adminLoginTitle: 'महाध्यक्ष लॉगिन',
       adminLoginSub: 'तुमच्या ईमेलने साइन इन करा',
       memberLoginTitle: 'सदस्य लॉगिन',
-      memberLoginSub: 'अॅडमिनकडून मिळालेली माहिती वापरा',
+      memberLoginSub: 'अध्यक्षांकडून मिळालेली माहिती वापरा',
     },
     en: {
       createGat: 'Create New Bachat Gat',

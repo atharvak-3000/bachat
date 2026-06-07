@@ -74,7 +74,7 @@ export default function LoansClient({
       rejectReasonDefault: "SuperAdmin द्वारे नाकारले",
       closeConfirm: "आपण नक्की हे कर्ज बंद करू इच्छिता? यामुळे थकीत शिल्लक 0 होईल आणि सर्व EMI भरलेले दाखवले जातील.",
       noPurpose: "तपशील नाही",
-      awaitingSuperAdminHint: "अॅडमिन मंजूर (प्रलंबित)",
+      awaitingSuperAdminHint: "अध्यक्ष मंजूर (प्रलंबित)",
     },
     en: {
       title: "Loans Management",
